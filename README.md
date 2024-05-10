@@ -16,8 +16,20 @@ But it can also be installed on a different computer on the same network.
 ## Download
 
 Download on the [Mac App Store](https://apps.apple.com/us/app/stagepresenter/id1566729423)
+Devices | Supported
+--- | ---
+☑️ | iPhone
+☑️ | iPad
+☑️ | MacOS
 
 Download the APK from [GitHub Releases](https://github.com/Lycol50/StagePresenter-for-ProPresenter/releases)
+
+Devices | Supported
+--- | ---
+☑️ | Android Phones
+☑️ | Android Tablets
+☑️ | Android TV
+
 
 ## Try it in the Browser
 

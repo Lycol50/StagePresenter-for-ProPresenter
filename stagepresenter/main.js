@@ -12,7 +12,7 @@ let screenConfigChangedTimeout = undefined
 // App Icon middle color: #4497f8
 
 // setUserTasks is only available on windows
-if (app.setUserTasks) {	
+if (app.setUserTasks) {
 	// Windows menu when right click on app icon
 	app.setUserTasks([
 		{
@@ -68,7 +68,7 @@ if (!app.isPackaged) {
 	})
 }
 
-app.setAboutPanelOptions({authors: ['Tim Vogel']})
+app.setAboutPanelOptions({ authors: ['Tim Vogel, Frizth Lyco Tatierra (princepines)'] })
 
 ipcMain.on('displaySelected', (event) => {
 	if (stagePresenterWindow && !stagePresenterWindow.isDestroyed()) {
@@ -132,13 +132,15 @@ async function createStagePresenterWindow(displayBounds) {
 			show: false
 		})
 	} else {
-		let bounds = {x: undefined, y: undefined, width: 4096, height: 2304}
+		let bounds = { x: undefined, y: undefined, width: 4096, height: 2304 }
 		const boundsValue = await localStorageGet("stagePresenterWindowModeWindowBounds")
 		try {
 			if (boundsValue != undefined && boundsValue.length > 0) {
 				const v = boundsValue.split(';')
-				const b = {x: parseInt(v[0]), y: parseInt(v[1]),
-					width: parseInt(v[2]), height: parseInt(v[3])}
+				const b = {
+					x: parseInt(v[0]), y: parseInt(v[1]),
+					width: parseInt(v[2]), height: parseInt(v[3])
+				}
 				const display = screen.getDisplayMatching(b)
 				const intersectAmount = rectIntersectionAmount(display.bounds, b)
 				if (intersectAmount / (b.width * b.height) > 0.5) {
@@ -214,7 +216,7 @@ async function createStagePresenterWindow(displayBounds) {
 		if (welcomeWindow && !welcomeWindow.isDestroyed()) {
 			welcomeWindow.webContents.send('updateDisplays')
 		}
-		if(operatorWindow && !operatorWindow.isDestroyed()) {
+		if (operatorWindow && !operatorWindow.isDestroyed()) {
 			operatorWindow.close()
 		}
 	})
@@ -248,7 +250,7 @@ async function createStagePresenterWindow(displayBounds) {
 	})
 }
 
-function createSettingsWindow () {
+function createSettingsWindow() {
 	if (settingsWindow && !settingsWindow.isDestroyed()) {
 		settingsWindow.close()
 	}
@@ -276,7 +278,7 @@ function createSettingsWindow () {
 	})
 }
 
-function createWelcomeWindow () {
+function createWelcomeWindow() {
 	if (welcomeWindow && !welcomeWindow.isDestroyed()) {
 		welcomeWindow.close()
 	}
@@ -288,20 +290,20 @@ function createWelcomeWindow () {
 		width: 1024,
 		height: 800,
 		center: true,
-		fullscreenable: false,
+		fullscreenable: true,
 		maximizable: false,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false
 		}
 	})
-	welcomeWindow.loadFile(`${__dirname}/application/welcome.html`)
+	welcomeWindow.loadFile(`${__dirname}/application/index.html`)
 	welcomeWindow.once('closed', function (ev) {
 		checkIfShouldQuit()
 	})
 }
 
-async function createOperatorWindow () {
+async function createOperatorWindow() {
 	// It is required to hide the dock, to show the Operator Window above other Fullscreen Windows
 	// https://syobochim.medium.com/electron-keep-apps-on-top-whether-in-full-screen-mode-or-on-other-desktops-d7d914579fce
 	// Needs to be done before operatorWindow is created
@@ -324,8 +326,10 @@ async function createOperatorWindow () {
 	if (boundsValue != undefined && boundsValue.length > 0) {
 		// TODO: avoid controller is behind Stagemonitor
 		const v = boundsValue.split(';')
-		const b = {x: parseInt(v[0]), y: parseInt(v[1]),
-			width: parseInt(v[2]), height: parseInt(v[3])}
+		const b = {
+			x: parseInt(v[0]), y: parseInt(v[1]),
+			width: parseInt(v[2]), height: parseInt(v[3])
+		}
 		const display = screen.getDisplayMatching(b)
 		let intersectsWithStagePresenterWindow = false
 		if (stagePresenterWindow != undefined && !stagePresenterWindow.isDestroyed()) {
@@ -360,7 +364,7 @@ async function createOperatorWindow () {
 		autoHideMenuBar: true
 	})
 	// Important to set visible on all workspaces with visibleOnFullScreen
-	operatorWindow.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true})
+	operatorWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 	operatorWindow.loadFile(`${__dirname}/application/operator.html`)
 	// Show window after setting things up
 	operatorWindow.show()
@@ -369,7 +373,7 @@ async function createOperatorWindow () {
 	// Set initial position to the bottom right
 	if (bounds.x == undefined || bounds.y == undefined) {
 		const pos = operatorWindow.getPosition()
-		const display = screen.getDisplayNearestPoint({x: pos[0], y: pos[1]})
+		const display = screen.getDisplayNearestPoint({ x: pos[0], y: pos[1] })
 		const isMac = process.platform === 'darwin'
 		const workArea = isMac ? display.bounds : display.workArea
 		bounds.x = workArea.x + workArea.width - bounds.width
@@ -383,12 +387,12 @@ async function createOperatorWindow () {
 		app.dock.show()
 	}
 
-	operatorWindow.on('focus', function() {
+	operatorWindow.on('focus', function () {
 		if (operatorWindow && !operatorWindow.isDestroyed()) {
 			operatorWindow.setOpacity(1)
 		}
 	})
-	operatorWindow.on('blur', function() {
+	operatorWindow.on('blur', function () {
 		if (operatorWindow && !operatorWindow.isDestroyed()) {
 			operatorWindow.setOpacity(0.7)
 		}
@@ -399,8 +403,8 @@ async function createOperatorWindow () {
 			const value = b.x + ";" + b.y + ";" + b.width + ";" + b.height
 			localStorageSet("operatorWindowBounds", value)
 			operatorWindow = undefined
-			setTimeout(function() {
-				if (stagePresenterWindow != undefined && !stagePresenterWindow.isDestroyed()) {
+			setTimeout(function () {
+				if (stagePresenterWindow != undefined && !stagePresenterWindow.isDestroyed()) {
 					console.log("showOperatorWindow -> false")
 					// stagePresenterWindow window has not been destroyed
 					// This means only the operator window was closed
@@ -451,15 +455,15 @@ app.whenReady().then(async () => {
 		const dockMenu = Menu.buildFromTemplate([
 			{
 				label: 'Open Settings',
-				click () { createSettingsWindow() }
+				click() { createSettingsWindow() }
 			},
 			{
 				label: 'Open Controller',
-				click () { createOperatorWindow() }
+				click() { createOperatorWindow() }
 			},
 			{
 				label: 'View Tips and Tricks Document',
-				click () { shell.openExternal('https://github.com/tim4724/StagePresenter-for-ProPresenter/blob/main/tips_and_tricks.md#tips-and-tricks-for-stagepresenter')	}
+				click() { shell.openExternal('https://github.com/tim4724/StagePresenter-for-ProPresenter/blob/main/tips_and_tricks.md#tips-and-tricks-for-stagepresenter') }
 			}
 		])
 		app.dock.setMenu(dockMenu)
@@ -498,7 +502,7 @@ app.whenReady().then(async () => {
 			}
 			await localStorageSet('localStorageVersion', '2')
 		}
-	} catch(e) {
+	} catch (e) {
 		console.log("localStorageVersionCheckFailed", e)
 	}
 
@@ -543,7 +547,7 @@ function checkIfShouldQuit() {
 		app.quit()
 	} else if (wins.length === 2) {
 		if (wins[0] === dummyWindow && wins[1] === operatorWindow ||
-				wins[1] === dummyWindow && wins[0] === operatorWindow) {
+			wins[1] === dummyWindow && wins[0] === operatorWindow) {
 			app.quit()
 		}
 	}
@@ -554,7 +558,7 @@ function localStorageGet(key) {
 }
 
 function localStorageSet(key, value) {
-	if (dummyWindow != undefined && !dummyWindow.isDestroyed()) {
+	if (dummyWindow != undefined && !dummyWindow.isDestroyed()) {
 		const script = 'localStorage.' + key + ' = "' + value + '"'
 		return dummyWindow.webContents.executeJavaScript(script)
 	} else {
@@ -573,7 +577,7 @@ function getDisplayById(id, allDisplays) {
 
 function rectIntersectionAmount(a, b) {
 	const top = Math.max(a.y, b.y)
-  	const bottom = Math.min(a.y + a.height, b.y + b.height)
+	const bottom = Math.min(a.y + a.height, b.y + b.height)
 	const left = Math.max(a.x, b.x)
 	const right = Math.min(a.x + a.width, b.x + b.width)
 	return Math.max(0, right - left) * Math.max(0, bottom - top)

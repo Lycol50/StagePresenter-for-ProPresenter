@@ -72,14 +72,14 @@ function initApplicationMenu(app, Menu) {
           label: 'View Project on Github',
           click: async () => {
             const { shell } = require('electron')
-            await shell.openExternal('https://github.com/tim4724/StagePresenter-for-ProPresenter')
+            await shell.openExternal('https://github.com/princepines/StagePresenter-for-ProPresenter')
           }
         },
         {
           label: 'View Tips and Tricks Document',
           click: async () => {
             const { shell } = require('electron')
-            await shell.openExternal('https://github.com/tim4724/StagePresenter-for-ProPresenter/blob/main/tips_and_tricks.md#tips-and-tricks-for-stagepresenter')
+            await shell.openExternal('https://github.com/princepines/StagePresenter-for-ProPresenter/blob/main/tips_and_tricks.md#tips-and-tricks-for-stagepresenter')
           }
         }
         ]

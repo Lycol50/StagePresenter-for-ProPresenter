@@ -10,7 +10,15 @@
 </head>
 
 <body onload='operator = Operator(); operator.requestState()'>
+	
 	<table>
+		<tr>
+			<td class="action" colspan="2">
+				<button id='backButton' onclick='window.location.href = "index.html"'>
+					Back to StagePresenter
+				</button>
+			</td>
+		</tr>
 		<tr>
 			<td id="currentPlaylist">
 				<select id="playlists"></select>
